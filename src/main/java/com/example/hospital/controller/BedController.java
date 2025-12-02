@@ -2,7 +2,6 @@ package com.example.hospital.controller;
 
 import com.example.hospital.model.Bed;
 import com.example.hospital.service.BedService;
-import com.example.hospital.service.BedTypeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +11,9 @@ import org.springframework.web.bind.annotation.*;
 public class BedController {
 
     private final BedService bedService;
-    private final BedTypeService bedTypeService;
 
-    public BedController(BedService bedService, BedTypeService bedTypeService) {
+    public BedController(BedService bedService) {
         this.bedService = bedService;
-        this.bedTypeService = bedTypeService;
     }
 
     // ----------------------------
@@ -25,21 +22,20 @@ public class BedController {
     @GetMapping
     public String listBeds(Model model) {
         model.addAttribute("beds", bedService.getAllBeds());
-        return "beds"; // beds.html
+        return "beds"; // renders beds.html
     }
 
     // ----------------------------
-    // Add Bed Form
+    // Show form to add a new bed
     // ----------------------------
     @GetMapping("/add")
     public String showAddForm(Model model) {
         model.addAttribute("bed", new Bed());
-        model.addAttribute("bedTypes", bedTypeService.getAllBedTypes());
-        return "bed_form"; // Corrected template name
+        return "bed_form"; // create a separate bed_form.html for add/edit
     }
 
     // ----------------------------
-    // Save Bed
+    // Save a new bed
     // ----------------------------
     @PostMapping("/save")
     public String saveBed(@ModelAttribute("bed") Bed bed) {
@@ -48,18 +44,17 @@ public class BedController {
     }
 
     // ----------------------------
-    // Edit Bed Form
+    // Edit existing bed
     // ----------------------------
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         Bed bed = bedService.getBedById(id);
         model.addAttribute("bed", bed);
-        model.addAttribute("bedTypes", bedTypeService.getAllBedTypes());
-        return "bed_form"; // Corrected template name
+        return "bed_form"; // reuse bed_form.html
     }
 
     // ----------------------------
-    // Delete Bed
+    // Delete bed
     // ----------------------------
     @GetMapping("/delete/{id}")
     public String deleteBed(@PathVariable Long id) {
