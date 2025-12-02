@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book Appointment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+
+    <div class="card shadow">
+        <div class="card-header bg-success text-white">
+            <h4>Book Appointment</h4>
+        </div>
+
+        <div class="card-body">
+
+            <form th:action="@{'/appointments/book/' + ${patient.id}}" method="post">
+
+                <h5 class="text-primary">Patient Information</h5>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label>Name</label>
+                        <input class="form-control" th:value="${patient.name}" readonly>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Mobile</label>
+                        <input class="form-control" th:value="${patient.mobile}" readonly>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Gender</label>
+                        <input class="form-control" th:value="${patient.gender}" readonly>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <h5 class="text-primary">Appointment Details</h5>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label>Doctor Name</label>
+                        <input class="form-control" name="doctorName" required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Appointment Date</label>
+                        <input type="date" class="form-control" name="appointmentDate" required>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label>Slot</label>
+                        <select class="form-control" name="slot">
+                            <option>Morning</option>
+                            <option>Afternoon</option>
+                            <option>Evening</option>
+                        </select>
+                    </div>
+                </div>
+
+                <label>Reason</label>
+                <input class="form-control mb-3" name="reason">
+
+                <button class="btn btn-success w-100">Book Appointment</button>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

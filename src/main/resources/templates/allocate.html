@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Allocate Bed</title>
+    <th:block th:replace="fragments/header :: header"></th:block>
+    <style>
+        /* Body and container */
+        body {
+            background: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* Card Styling */
+        .card {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h4 {
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        /* List group styling */
+        .list-group-item {
+            border: none;
+            padding: 8px 0;
+            font-size: 15px;
+        }
+
+        /* Form Inputs */
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        select.form-select, textarea.form-control {
+            border-radius: 10px;
+            padding: 10px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        select.form-select:focus, textarea.form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+            outline: none;
+        }
+
+        textarea.form-control {
+            resize: none;
+        }
+
+        /* Buttons */
+        .btn-lg {
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+
+        .btn-secondary:hover {
+            background: #6c757d;
+        }
+
+        /* Bed Type Colors */
+        .text-danger { color: #dc3545 !important; font-weight: 600; }
+        .text-primary { color: #0d6efd !important; font-weight: 600; }
+        .text-success { color: #28a745 !important; font-weight: 600; }
+        .text-warning { color: #ffc107 !important; font-weight: 600; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+           <div th:replace="fragments/navbar :: staffNavbar"></div>
+<br>
+<div class="container mt-5">
+
+    <h2>Allocate Bed to Patient</h2>
+
+    <div class="card">
+
+        <!-- Patient Info -->
+        <h4>Patient Information</h4>
+        <ul class="list-group mb-4">
+            <li class="list-group-item"><b>ID:</b> <span th:text="${patient.id}"></span></li>
+            <li class="list-group-item"><b>Name:</b> <span th:text="${patient.name}"></span></li>
+            <li class="list-group-item"><b>Mobile:</b> <span th:text="${patient.mobileNumber}"></span></li>
+        </ul>
+
+        <!-- Allocation Form -->
+        <form method="post" th:action="@{/api/beds/allocate}">
+
+            <!-- Hidden patient ID -->
+            <input type="hidden" name="patientId" th:value="${patient.id}"/>
+
+            <!-- Bed Dropdown -->
+            <div class="mb-4">
+                <label for="bedId" class="form-label">Choose Bed:</label>
+                <select id="bedId" name="bedId" class="form-select" required>
+                    <option value="" disabled selected>-- Select Available Bed --</option>
+                    <th:block th:each="b : ${beds}">
+                        <option th:value="${b.id}"
+                                th:data-bedtype="${b.bedType != null ? b.bedType.name : 'UNKNOWN'}"
+                                th:text="${(b.code != null ? b.code : 'No Code') + ' - ' + (b.bedType != null ? b.bedType.name : 'No Type') + ' (' + (b.ward != null ? b.ward : 'No Ward') + ')'}">
+                        </option>
+                    </th:block>
+                </select>
+            </div>
+
+            <!-- Reason -->
+            <div class="mb-4">
+                <label for="reason" class="form-label">Reason:</label>
+                <textarea id="reason" name="reason" class="form-control" rows="3"
+                          placeholder="Enter reason for admission" required></textarea>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-start gap-2">
+                <button type="submit" class="btn btn-primary btn-lg">Allocate Bed</button>
+                <a class="btn btn-secondary btn-lg" th:href="@{/patients}">Cancel</a>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<th:block th:replace="fragments/footer :: footer"></th:block>
+
+<!-- Bed type coloring script -->
+<script>
+    const bedSelect = document.getElementById('bedId');
+
+    bedSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const bedType = selectedOption.getAttribute('data-bedtype');
+
+        // Remove previous classes
+        this.classList.remove('text-danger', 'text-primary', 'text-success', 'text-warning');
+
+        // Add new class based on bed type
+        if(bedType === 'ICU') this.classList.add('text-danger');
+        else if(bedType === 'OXYGEN') this.classList.add('text-primary');
+        else if(bedType === 'GENERAL') this.classList.add('text-success');
+        else if(bedType === 'PRIVATE') this.classList.add('text-warning');
+    });
+</script>
+
+<!-- AJAX form submission script -->
+<script>
+    const form = document.querySelector('form');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const data = {
+            patientId: document.querySelector('[name="patientId"]').value,
+            bedId: document.querySelector('[name="bedId"]').value,
+            reason: document.querySelector('[name="reason"]').value
+        };
+
+        fetch('/api/beds/allocate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(result => {
+            alert('Bed allocated successfully!');
+            window.location.href = '/patients';
+        })
+        .catch(err => {
+            alert(err.message || 'Error allocating bed');
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Appointments</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        h1 { color: #333; }
+    </style>
+</head>
+<body>
+            <div th:replace="fragments/navbar :: staffNavbar"></div>
+<br>
+<h1>Appointments List</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Patient</th>
+        <th>Doctor</th>
+        <th>Date</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="appt : ${appointments}">
+        <td th:text="${appt.id}"></td>
+        <td th:text="${appt.patientName}"></td>
+        <td th:text="${appt.doctorName}"></td>
+        <td th:text="${appt.appointmentDate}"></td>
+        <td th:text="${appt.status}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

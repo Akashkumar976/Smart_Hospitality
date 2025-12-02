@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Hospital Beds</title>
+    <th:block th:replace="fragments/header :: header"></th:block>
+    <style>
+        /* Smooth animation for entire table area */
+@keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Page container animation */
+.container {
+    animation: fadeSlide 0.6s ease-out;
+    max-width: 900px;             /* Center the table tighter */
+    margin: auto;                 /* Center horizontally */
+    background: rgba(255,255,255,0.2);
+    padding: 20px;
+    border-radius: 12px;
+}
+
+/* Heading + Add Button alignment */
+.d-flex {
+    align-items: center;
+}
+
+.d-flex h2 {
+    margin: 0;
+}
+
+/* Stylish Add Button */
+.btn-success {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: 10px;
+    transition: 0.3s ease-in-out;
+}
+
+.btn-success:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 18px rgba(40,167,69,0.4);
+    background: linear-gradient(135deg, #20c997, #28a745);
+}
+
+/* Center table text */
+table th, table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Card-like table styling */
+.table {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+}
+
+/* Table header styling */
+.table thead th {
+    background: #0d6efd;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Available / Occupied backgrounds (existing) */
+.bg-available {
+    background-color: #d4edda !important;
+}
+.bg-occupied {
+    background-color: #f8d7da !important;
+}
+
+/* Smooth hover lift effect for rows */
+tbody tr {
+    transition: all 0.25s ease-in-out;
+}
+tbody tr:hover {
+    transform: scale(1.01);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    background: #eef1f7 !important;
+}
+
+/* Badge styling */
+.badge {
+    font-size: 13px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-available {
+    background-color: #28a745 !important;
+    color: white;
+}
+.badge-occupied {
+    background-color: #dc3545 !important;
+    color: white;
+}
+
+/* Table Row Hover Glow */
+tbody tr:hover .badge-available {
+    box-shadow: 0 0 10px rgba(40,167,69,0.5);
+}
+tbody tr:hover .badge-occupied {
+    box-shadow: 0 0 10px rgba(220,53,69,0.5);
+}
+
+/* Buttons inside table */
+.btn {
+    transition: 0.25s ease-in-out;
+    border-radius: 8px;
+}
+
+.btn-primary:hover,
+.btn-danger:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+}
+.btn-danger {
+    background-color: #dc3545;
+}
+
+/* Header alignment enhancements */
+h2 {
+    font-weight: 700;
+    letter-spacing: 0.4px;
+}
+
+    </style>
+</head>
+
+<body>
+           <div th:replace="fragments/navbar :: staffNavbar"></div>
+<br>
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between mb-2">
+        <h2>Hospital Beds</h2>
+        <br><br>
+        <a class="btn btn-success" th:href="@{/beds/add}">Add Bed</a>
+    </div>
+ <br><br>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Code</th>
+            <th>Type</th>
+            <th>Ward</th>
+            <th>Room</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="bed : ${beds}"
+            th:class="${bed.status=='AVAILABLE'} ? 'bg-available' : 'bg-occupied'">
+            <td th:text="${bed.code}"></td>
+            <td th:text="${bed.bedType != null ? bed.bedType.name : 'Unknown'}"></td>
+            <td th:text="${bed.ward}"></td>
+            <td th:text="${bed.roomNumber}"></td>
+
+            <td>
+                <span class="badge"
+                      th:text="${bed.status}"
+                      th:classappend="${bed.status=='AVAILABLE'} ? ' badge-available' : ' badge-occupied'">
+                </span>
+            </td>
+
+            <td>
+                <a th:href="@{|/beds/edit/${bed.id}|}" class="btn btn-primary btn-sm">Edit</a>
+                <a th:href="@{|/beds/delete/${bed.id}|}" class="btn btn-danger btn-sm"
+                   onclick="return confirm('Are you sure?')">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<th:block th:replace="fragments/footer :: footer"></th:block>
+</body>
+</html>

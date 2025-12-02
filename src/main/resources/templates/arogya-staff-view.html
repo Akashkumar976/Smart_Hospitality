@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View Staff</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+        <div th:replace="fragments/navbar :: staffNavbar"></div>
+
+<div class="container mt-5">
+    <h2>Staff Details</h2>
+    <table class="table table-bordered">
+        <tr>
+            <th>Name</th>
+            <td th:text="${staff.name}"></td>
+        </tr>
+        <tr>
+            <th>Staff ID</th>
+            <td th:text="${staff.staffId}"></td>
+        </tr>
+        <tr>
+            <th>Aadhaar Number</th>
+            <td th:text="${staff.adharNumber}"></td>
+        </tr>
+        <tr>
+            <th>Role</th>
+            <td th:text="${staff.role}"></td>
+        </tr>
+        <tr>
+            <th>Mobile</th>
+            <td th:text="${staff.mobileNumber}"></td>
+        </tr>
+        <tr>
+            <th>Gender</th>
+            <td th:text="${staff.gender}"></td>
+        </tr>
+        <tr>
+            <th>Join Date</th>
+            <td th:text="${staff.joinDate != null} ? ${#temporals.format(staff.joinDate, 'yyyy-MM-dd HH:mm')} : ''"></td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td th:text="${staff.status}"></td>
+        </tr>
+        <tr>
+            <th>Address</th>
+            <td th:text="${staff.address}"></td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td th:text="${staff.email}"></td>
+        </tr>
+    </table>
+    <a th:href="@{/admin/staff/dashboard}" class="btn btn-secondary">Back</a>
+</div>
+</body>
+</html>

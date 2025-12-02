@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add/Edit Staff</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+            <div th:replace="fragments/navbar :: staffNavbar"></div>
+<br>
+<div class="container mt-5">
+    <h2 th:text="${staff.id != null} ? 'Edit Staff' : 'Add Staff'"></h2>
+    <form th:action="@{/admin/staff/add}" th:object="${staff}" method="post">
+        <input type="hidden" th:field="*{id}"/>
+
+        <div class="mb-3">
+            <label class="form-label">Staff ID</label>
+            <input type="text" class="form-control" th:field="*{staffId}" placeholder="Staff ID (auto-generated if empty)">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" th:field="*{name}" placeholder="Full Name" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Aadhaar Number</label>
+            <input type="text" class="form-control" th:field="*{adharNumber}" placeholder="12-digit Aadhaar" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Role</label>
+            <select class="form-select" th:field="*{role}" required>
+                <option value="" disabled>Select Role</option>
+                <option value="Receptionist" th:selected="${staff.role == 'Receptionist'}">Receptionist</option>
+                <option value="Nurse" th:selected="${staff.role == 'Nurse'}">Nurse</option>
+                <option value="Ward Boy" th:selected="${staff.role == 'Ward Boy'}">Ward Boy</option>
+                <option value="Technician" th:selected="${staff.role == 'Technician'}">Technician</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Mobile</label>
+            <input type="text" class="form-control" th:field="*{mobileNumber}" placeholder="Mobile Number" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Gender</label>
+            <select class="form-select" th:field="*{gender}">
+                <option value="" disabled>Select Gender</option>
+                <option value="Male" th:selected="${staff.gender == 'Male'}">Male</option>
+                <option value="Female" th:selected="${staff.gender == 'Female'}">Female</option>
+                <option value="Other" th:selected="${staff.gender == 'Other'}">Other</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" th:field="*{email}" placeholder="Email" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Address</label>
+            <textarea class="form-control" th:field="*{address}" placeholder="Address" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control" th:field="*{password}" placeholder="Set Password">
+        </div>
+
+        <div class="mb-3">
+            <label for="joinDate">Join Date</label>
+            <input type="datetime-local" id="joinDate" th:field="*{joinDate}" 
+                   th:value="${staff.joinDate != null} ? ${#temporals.format(staff.joinDate, 'yyyy-MM-dd\'T\'HH:mm')} : ''" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select class="form-select" th:field="*{status}">
+                <option value="Active" th:selected="${staff.status == 'Active'}">Active</option>
+                <option value="Inactive" th:selected="${staff.status == 'Inactive'}">Inactive</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a th:href="@{/admin/staff/dashboard}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

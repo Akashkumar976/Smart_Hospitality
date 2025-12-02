@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Billing List</title>
+
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f8; padding: 20px; }
+        .container { max-width: 1100px; margin: auto; background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        table, th, td { border: 1px solid #ccc; }
+        th, td { padding: 12px; text-align: center; }
+        th { background: #2c3e50; color: white; }
+        tr:nth-child(even) { background: #f9f9f9; }
+
+        a.button { text-decoration: none; padding: 6px 12px; border-radius: 5px; color: white; }
+        a.edit { background: #3498db; }
+        a.delete { background: #e74c3c; }
+        a.add { background: #2ecc71; margin-bottom: 15px; display: inline-block; }
+
+        /* Filter Section */
+        #filterBox {
+            padding: 15px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        select, input {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        /* Summary */
+        .summary-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            font-size: 17px;
+        }
+    </style>
+</head>
+
+<body>
+<div th:replace="fragments/navbar :: staffNavbar"></div>
+
+<div class="container">
+    <h2>Billing List</h2>
+
+    <a th:href="@{/admin/appointments/billing/add}" class="button add">Add New Bill</a>
+
+    <!-- SEARCH BAR (ALWAYS VISIBLE) -->
+    <input type="text" id="searchInput" placeholder="Search..." 
+           style="padding:10px;width:100%;margin-bottom:15px;border-radius:6px;border:1px solid #ccc;"
+           onkeyup="applyFilters()">
+
+    <!-- FILTER BUTTON -->
+    <button onclick="toggleFilterBox()" 
+            style="padding:8px 15px;background:#3b82f6;color:white;border:none;border-radius:6px;cursor:pointer;">
+        Filter
+    </button>
+
+    <!-- FILTER BOX -->
+    <div id="filterBox">
+
+        <div>
+            <label><b>Filter By:</b></label>
+            <select id="filterSelect" onchange="loadFilterInput()">
+                <option value="">Select Filter</option>
+                <option value="name">Patient Name</option>
+                <option value="id">Appointment ID</option>
+                <option value="status">Status</option>
+                <option value="mode">Mode</option>
+                <option value="date">Date</option>
+                <option value="service">Service</option>
+            </select>
+        </div>
+
+        <div style="margin-top:10px;">
+            <label><b>Value:</b></label>
+            <span id="dynamicInput"></span>
+        </div>
+
+        <button onclick="applyFilters()" 
+                style="margin-top:10px;background:#16a34a;padding:8px 15px;color:white;border:none;border-radius:6px;">
+            Apply
+        </button>
+
+        <button onclick="clearFilters()" 
+                style="margin-top:10px;background:#dc2626;padding:8px 15px;color:white;border:none;border-radius:6px;">
+            Clear
+        </button>
+
+    </div>
+
+    <!-- BILLING TABLE -->
+    <table id="billTable">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Appointment ID</th>
+            <th>Patient Name</th>
+            <th>Service</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Mode</th>
+            <th>UTR</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody id="billBody">
+        <tr th:each="bill : ${bills}">
+            <td th:text="${bill.id}"></td>
+            <td th:text="${bill.appointment?.id}"></td>
+            <td th:text="${bill.patientName}"></td>
+            <td th:text="${bill.service}"></td>
+            <td th:text="${bill.amount}"></td>
+            <td th:text="${bill.status}"></td>
+            <td th:text="${bill.mode}"></td>
+            <td th:text="${bill.utr}"></td>
+            <td th:text="${#temporals.format(bill.date,'dd-MM-yyyy')}"></td>
+            <td th:text="${bill.time}"></td>
+            <td>
+                <a th:href="@{'/admin/appointments/billing/edit/' + ${bill.id}}" class="button edit">Edit</a>
+                <a th:href="@{'/admin/appointments/billing/delete/' + ${bill.id}}" class="button delete"
+                   onclick="return confirm('Are you sure?')">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- SUMMARY -->
+    <div class="summary-box">
+        <p><b>Total :</b> ₹<span id="totalBusiness"></span></p>
+        <p><b>Total Paid:</b> ₹<span id="totalPaid"></span></p>
+        <p><b>Total Unpaid:</b> ₹<span id="totalUnpaid"></span></p>
+    </div>
+</div>
+
+
+<script>
+    function toggleFilterBox() {
+        let box = document.getElementById("filterBox");
+        box.style.display = box.style.display === "none" ? "block" : "none";
+    }
+
+    function loadFilterInput() {
+        let type = document.getElementById("filterSelect").value;
+        let container = document.getElementById("dynamicInput");
+
+        container.innerHTML = "";
+
+        if (!type) return;
+
+        // create select
+        let select = document.createElement("select");
+        select.id = "filterValue";
+
+        let rows = document.querySelectorAll("#billBody tr");
+        let unique = new Set();
+
+        rows.forEach(r => {
+            let cells = r.querySelectorAll("td");
+
+            if (type === "name") unique.add(cells[2].innerText);
+            if (type === "id") unique.add(cells[1].innerText);
+            if (type === "service") unique.add(cells[3].innerText);
+            if (type === "mode") unique.add(cells[6].innerText.toLowerCase());
+            if (type === "status") unique.add(cells[5].innerText.toLowerCase());
+        });
+
+        if (type === "date") {
+            container.innerHTML = `<input type="date" id="filterValue">`;
+            return;
+        }
+
+        unique = [...unique].filter(v => v && v !== "-");
+
+        let opt = document.createElement("option");
+        opt.value = "";
+        opt.innerText = "Select Value";
+        select.appendChild(opt);
+
+        unique.forEach(v => {
+            let o = document.createElement("option");
+            o.value = v;
+            o.innerText = v.charAt(0).toUpperCase() + v.slice(1);
+            select.appendChild(o);
+        });
+
+        container.appendChild(select);
+    }
+
+    function applyFilters() {
+        let searchVal = document.getElementById("searchInput").value.toLowerCase();
+        let type = document.getElementById("filterSelect").value;
+        let valueInput = document.getElementById("filterValue");
+        let val = valueInput ? valueInput.value.toLowerCase() : "";
+
+        let rows = document.querySelectorAll("#billBody tr");
+
+        let total = 0, paid = 0, unpaid = 0;
+
+        rows.forEach(r => {
+            let cells = r.querySelectorAll("td");
+            let name = cells[2].innerText.toLowerCase();
+            let id = cells[1].innerText;
+            let service = cells[3].innerText.toLowerCase();
+            let amount = parseFloat(cells[4].innerText) || 0;
+            let status = cells[5].innerText.toLowerCase();
+            let mode = cells[6].innerText.toLowerCase();
+            let date = cells[8].innerText.split("-").reverse().join("-");
+
+            let show = true;
+
+            // search
+            if (searchVal && !r.innerText.toLowerCase().includes(searchVal)) show = false;
+
+            // filter logic
+            if (type === "name" && val && name !== val) show = false;
+            if (type === "id" && val && id !== val) show = false;
+            if (type === "service" && val && service !== val) show = false;
+            if (type === "status" && val && status !== val) show = false;
+            if (type === "mode" && val && mode !== val) show = false;
+            if (type === "date" && val && date !== val) show = false;
+
+            if (show) {
+                r.style.display = "";
+                total += amount;
+                if (status === "paid") paid += amount;
+                else unpaid += amount;
+            } else {
+                r.style.display = "none";
+            }
+        });
+
+        document.getElementById("totalBusiness").innerText = total;
+        document.getElementById("totalPaid").innerText = paid;
+        document.getElementById("totalUnpaid").innerText = unpaid;
+    }
+
+    function clearFilters() {
+        document.getElementById("filterSelect").value = "";
+        document.getElementById("dynamicInput").innerHTML = "";
+        document.getElementById("searchInput").value = "";
+        applyFilters();
+    }
+
+    document.addEventListener("DOMContentLoaded", applyFilters);
+</script>
+
+</body>
+</html>

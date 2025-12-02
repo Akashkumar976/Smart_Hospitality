@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Billing</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f8; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; margin-bottom: 20px; }
+        label { font-weight: bold; display: block; margin: 10px 0 5px; }
+        input, select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin-bottom: 15px; }
+        button { background: #2c3e50; color: white; padding: 12px; width: 100%; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #1a242f; }
+    </style>
+</head>
+
+<body>
+        <div th:replace="fragments/navbar :: staffNavbar"></div>
+
+<div class="container">
+    <h2>Create Billing</h2>
+
+    <!-- Form -->
+    <form th:action="@{/admin/appointments/billing/add}" th:object="${bill}" method="post">
+
+        <label>Select Appointment:</label>
+        <select id="appointmentSelect" name="appointmentId" required>
+            <option th:each="app : ${appointments}" 
+                    th:value="${app.id}" 
+                    th:text="${app.patientName} + ' - ' + ${app.appointmentDate} + ' - ' + ${app.slot}">
+            </option>
+        </select>
+
+        <label>Patient Name:</label>
+        <input type="text" th:field="*{patientName}" id="patientName" required />
+
+        <label>Service:</label>
+        <input type="text" th:field="*{service}" required />
+
+        <label>Amount:</label>
+        <input type="number" th:field="*{amount}" required step="0.01" />
+
+        <label>Status:</label>
+        <select th:field="*{status}" id="statusSelect" onchange="toggleMode()">
+            <option value="unpaid">Unpaid</option>
+            <option value="paid">Paid</option>
+        </select>
+
+        <div id="modeDiv" style="display:none;">
+            <label>Mode:</label>
+            <select th:field="*{mode}" id="modeSelect" onchange="toggleUTR()">
+                <option value="cash">Cash</option>
+                <option value="online">Online</option>
+            </select>
+
+            <div id="utrDiv" style="display:none;">
+                <label>UTR Number:</label>
+                <input type="text" th:field="*{utr}" />
+            </div>
+        </div>
+
+        <button type="submit">Save Bill</button>
+    </form>
+</div>
+
+<script>
+function toggleMode() {
+    const status = document.getElementById("statusSelect").value;
+    const modeDiv = document.getElementById("modeDiv");
+    modeDiv.style.display = (status === "paid") ? "block" : "none";
+    toggleUTR();
+}
+
+function toggleUTR() {
+    const mode = document.getElementById("modeSelect").value;
+    document.getElementById("utrDiv").style.display = (mode === "online") ? "block" : "none";
+}
+
+// Pre-fill patient name when appointment is selected
+function fillPatientName() {
+    const select = document.getElementById("appointmentSelect");
+    const patientInput = document.getElementById("patientName");
+    const selectedOption = select.options[select.selectedIndex];
+    if(selectedOption) {
+        const text = selectedOption.text.split(" - ")[0]; // extract patient name
+        patientInput.value = text;
+    }
+}
+
+// Update patient name whenever appointment changes
+document.getElementById("appointmentSelect").addEventListener("change", fillPatientName);
+
+// Initialize on page load
+document.addEventListener("DOMContentLoaded", function() {
+    toggleMode();
+    fillPatientName();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Staff Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+        <div th:replace="fragments/navbar :: staffNavbar"></div>
+<div class="container mt-5">
+
+    <h2>Staff List</h2>
+
+    <div th:if="${staffList != null and !staffList.isEmpty()}">
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Staff ID</th>
+                    <th>Name</th>
+                    <th>Aadhaar</th>
+                    <th>Role</th>
+                    <th>Mobile</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Join Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="s : ${staffList}">
+                    <td th:text="${s.id}"></td>
+                    <td th:text="${s.staffId}"></td>
+                    <td th:text="${s.name}"></td>
+                    <td th:text="${s.adharNumber}"></td>
+                    <td th:text="${s.role}"></td>
+                    <td th:text="${s.mobileNumber}"></td>
+                    <td th:text="${s.email}"></td>
+                    <td th:text="${s.address}"></td>
+                    <td th:text="${s.joinDate != null ? #temporals.format(s.joinDate, 'yyyy-MM-dd HH:mm') : 'N/A'}"></td>
+                    <td th:text="${s.status}"></td>
+                    <td>
+                        <a th:href="@{'/admin/staff/view/' + ${s.id}}" class="btn btn-info btn-sm">View</a>
+                        <a th:href="@{'/admin/staff/edit/' + ${s.id}}" class="btn btn-warning btn-sm">Edit</a>
+                        <a th:href="@{'/admin/staff/delete/' + ${s.id}}" class="btn btn-danger btn-sm"
+                           onclick="return confirm('Are you sure?');">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:if="${staffList == null or staffList.isEmpty()}" class="alert alert-warning">
+        No staff found.
+    </div>
+
+</div>
+</body>
+</html>

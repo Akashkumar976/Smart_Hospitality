@@ -1,0 +1,53 @@
+<div th:fragment="staffNavbar">
+    <style>
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1e293b; /* dark navy */
+            padding: 12px 25px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .navbar h2 {
+            color: #fff;
+            margin: 0;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .navbar div a {
+            text-decoration: none;
+            color: #e2e8f0;
+            font-weight: 500;
+            padding: 10px 16px;
+            border-radius: 8px;
+            margin-left: 8px;
+            background: #334155;
+            transition: 0.3s ease-in-out;
+            display: inline-block;
+        }
+
+        .navbar div a:hover {
+            background: #3b82f6;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(59,130,246,0.5);
+        }
+
+        .active {
+            background: #64748b !important;
+            color: #fff !important;
+        }
+    </style>
+
+    <div class="navbar">
+
+        <div>
+            <a th:href="@{/admin/staff/dashboard}">Staff</a>
+            <a th:href="@{/admin/appointments}">Appointments</a>
+            <a th:href="@{/admin/appointments/billing}">Billing</a>
+            <a th:href="@{/admin/staff/logout}">Logout</a>
+        </div>
+    </div>
+</div>

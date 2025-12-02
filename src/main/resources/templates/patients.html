@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Patients Dashboard</title>
+    <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+
+    <style>
+        /* Reset and body */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f6f8;
+            color: #333;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #2c3e50;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        /* Page Title with Gradient */
+        .text-gradient {
+            background: linear-gradient(90deg, #007bff, #00d4ff);
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+            font-size: 2rem;
+        }
+
+        /* Container */
+        .container-fluid {
+            padding: 30px 20px;
+            width: 100%;
+        }
+
+        /* Buttons with Gradient & Hover */
+        .btn-gradient {
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+            color: #fff;
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(90deg, #28a745, #85e085);
+            border: none;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Table Full Width & Effects */
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        thead.table-dark {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        thead.table-dark th {
+            font-size: 1.1rem; /* larger header */
+            background: linear-gradient(90deg, #0072ff, #00c6ff);
+            color: white;
+        }
+
+        tbody tr {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            transform-origin: left center; /* fix first letter clipping */
+            overflow: visible;
+        }
+
+        tbody tr:hover {
+            background: linear-gradient(90deg, #e0f7ff, #d1ecf1);
+            color: #0072ff;
+            transform: scale(1.02);
+        }
+
+        /* Badges */
+        .badge {
+            font-size: 0.9rem;
+            padding: 0.5em 0.8em;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .badge.bg-success {
+            background: linear-gradient(90deg, #28a745, #85e085);
+        }
+
+        .badge.bg-danger {
+            background: linear-gradient(90deg, #ff4b2b, #ff6a3c);
+        }
+
+        .badge.bg-secondary {
+            background: linear-gradient(90deg, #6c757d, #adb5bd);
+        }
+
+        /* Action Buttons */
+        .btn-sm {
+            font-size: 0.85rem;
+            margin-right: 5px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-sm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        .btn-edit {
+            background: linear-gradient(90deg, #ffb347, #ffcc33);
+            color: #fff;
+        }
+
+        .btn-edit:hover {
+            background: linear-gradient(90deg, #ffcc33, #ffb347);
+        }
+
+        .btn-delete {
+            background: linear-gradient(90deg, #ff4b2b, #ff6a3c);
+            color: #fff;
+        }
+
+        .btn-delete:hover {
+            background: linear-gradient(90deg, #ff6a3c, #ff4b2b);
+        }
+
+        .btn-allocate {
+            background: linear-gradient(90deg, #36d1dc, #5b86e5);
+            color: #fff;
+        }
+
+        .btn-allocate:hover {
+            background: linear-gradient(90deg, #5b86e5, #36d1dc);
+        }
+
+        /* Search Box */
+        #searchInput {
+            width: 300px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1px solid #ccc;
+            margin-left: auto;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <div th:replace="~{fragments/navbar :: staffNavbar}"></div>
+
+    <div class="container-fluid mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="text-gradient">Patients</h2>
+            <a class="btn btn-success btn-gradient" th:href="@{/patients/add}">Add Patient</a>
+        </div>
+
+        <!-- Search Box -->
+        <input type="text" id="searchInput" placeholder="Search by UID, Name, or Mobile..." />
+
+        <div class="table-container">
+            <table class="table table-striped table-hover align-middle" id="patientsTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>UID</th>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Mobile</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="patient : ${patients}">
+                        <td th:text="${patient.patientUid}"></td>
+                        <td th:text="${patient.name}"></td>
+                        <td th:text="${patient.age}"></td>
+                        <td th:text="${patient.gender}"></td>
+                        <td th:text="${patient.mobileNumber}"></td>
+                        <td>
+                            <span class="badge rounded-pill px-3 py-2"
+                                  th:text="${patient.status}"
+                                  th:classappend="${patient.status=='ADMITTED' ? ' bg-success' : (patient.status=='DISCHARGED' ? ' bg-danger' : ' bg-secondary')}">
+                            </span>
+                        </td>
+                        <td>
+                            <a th:href="@{|/patients/edit/${patient.id}|}" class="btn btn-sm btn-edit">Edit</a>
+                            <a th:href="@{|/patients/delete/${patient.id}|}" class="btn btn-sm btn-delete"
+                               onclick="return confirm('Are you sure?')">Delete</a>
+                            <a th:href="@{|/allocations/allocate/${patient.id}|}" class="btn btn-sm btn-allocate">Allocate</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+    <!-- Client-side search/filter -->
+    <script>
+        const searchInput = document.getElementById("searchInput");
+        searchInput.addEventListener("keyup", function () {
+            const filter = searchInput.value.toLowerCase();
+            const rows = document.querySelectorAll("#patientsTable tbody tr");
+            rows.forEach(row => {
+                const uid = row.cells[0].textContent.toLowerCase();
+                const name = row.cells[1].textContent.toLowerCase();
+                const mobile = row.cells[4].textContent.toLowerCase();
+                if (uid.includes(filter) || name.includes(filter) || mobile.includes(filter)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

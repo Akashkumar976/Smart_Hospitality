@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Hospital Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="bg-primary text-white p-3 mb-4">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h1>Welcome to Arogya Smart Hospital</h1>
+            <nav>
+                <ul class="nav">
+                    <li class="nav-item"><a class="nav-link text-white" href="/admin/login">Admin Login</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/doctor/login">Doctor Login</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/patient/login">Patient Login</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/receptionist/login">Receptionist Login</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="/arogya-staff/login">Staff Login / Signup</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="text-center">
+            <p class="lead">This is the starting page of the Smart Hospital Management System.</p>
+            <p>Use the menu above to navigate to your respective login pages or dashboards.</p>
+        </div>
+
+        <div class="row mt-4 justify-content-center">
+            <div class="col-md-3 mb-3">
+                <a href="/admin/login" class="btn btn-primary w-100">Admin Login</a>
+            </div>
+            <div class="col-md-3 mb-3">
+                <a href="/doctor/login" class="btn btn-success w-100">Doctor Login</a>
+            </div>
+            <div class="col-md-3 mb-3">
+                <a href="/patient/login" class="btn btn-info w-100">Patient Login</a>
+            </div>
+            <div class="col-md-3 mb-3">
+                <a href="/receptionist/login" class="btn btn-warning w-100">Receptionist Login</a>
+            </div>
+            <div class="col-md-3 mb-3">
+                <a href="/admin/staff/login" class="btn btn-secondary w-100">Staff Login / Signup</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-light text-center p-3 mt-4">
+        &copy; 2025 Arogya Smart Hospital
+    </footer>
+
+</body>
+</html>

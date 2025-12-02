@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title th:text="${bed.id} != null ? 'Edit Bed' : 'Add Bed'">Bed Form</title>
+
+    <th:block th:replace="fragments/header :: header"></th:block>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+
+    <!-- ⭐ Dynamic Custom CSS -->
+    <style>
+        /* Full Page Center Layout */
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #e3f2fd, #f8f9fa);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Fade & Slide Animation */
+@keyframes slideFade {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Centered Form Container */
+.form-container {
+    width: 100%;
+    max-width: 450px;
+    padding: 30px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    animation: slideFade 0.8s ease-out;
+    transition: all 0.3s ease;
+}
+
+/* Hover Lift Effect */
+.form-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 35px rgba(0,0,0,0.16);
+}
+
+/* Title */
+h2 {
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 15px;
+    letter-spacing: 0.4px;
+}
+
+/* Input & Select Fields */
+.form-control,
+.form-select {
+    height: 45px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background: rgba(255, 255, 255, 0.95);
+    transition: 0.3s ease;
+}
+
+/* Hover Effect */
+.form-control:hover,
+.form-select:hover {
+    border-color: #74b9ff;
+    box-shadow: 0 0 10px rgba(9,132,227,0.2);
+}
+
+/* Focus Effect */
+.form-control:focus,
+.form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 12px rgba(13,110,253,0.35);
+}
+
+/* Labels */
+.form-label {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+/* Button Enhancements */
+button {
+    height: 45px;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: 0.3s ease;
+}
+
+/* Primary Button Hover */
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(13,110,253,0.4);
+}
+
+/* Secondary Button Hover */
+.btn-secondary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(108,117,125,0.3);
+}
+
+/* Button Group Alignment */
+.d-flex {
+    justify-content: center;
+    gap: 15px;
+}
+
+    </style>
+</head>
+
+<body>
+       <div th:replace="fragments/navbar :: staffNavbar"></div>
+<br>
+<div class="container mt-5">
+    <div class="form-container">
+
+        <h2 th:text="${bed.id} != null ? 'Edit Bed' : 'Add Bed'"></h2>
+        <hr>
+
+        <form th:action="@{/beds/save}" th:object="${bed}" method="post">
+
+            <input type="hidden" th:field="*{id}"/>
+
+            <!-- Bed Code -->
+            <div class="mb-3">
+                <label class="form-label">Bed Code</label>
+                <input type="text" class="form-control"
+                       th:field="*{code}"
+                       placeholder="Enter Bed Code" required/>
+            </div>
+
+            <!-- Bed Type -->
+            <div class="mb-3">
+                <label class="form-label">Bed Type</label>
+ <select class="form-select" th:field="*{bedType}" required>
+    <option value="" disabled>Select Bed Type</option>
+
+    <option th:each="type : ${bedTypes}"
+            th:value="${type.id}"
+            th:selected="${bed.bedType != null and bed.bedType.id == type.id}"
+            th:text="${type.name}">
+    </option>
+</select>
+
+            </div>
+
+            <!-- Ward -->
+            <div class="mb-3">
+                <label class="form-label">Ward</label>
+                <input type="text" class="form-control"
+                       th:field="*{ward}"
+                       placeholder="Enter Ward Name" required/>
+            </div>
+
+            <!-- Room Number -->
+            <div class="mb-3">
+                <label class="form-label">Room Number</label>
+                <input type="text" class="form-control"
+                       th:field="*{roomNumber}"
+                       placeholder="Enter Room Number" required/>
+            </div>
+
+            <!-- Status -->
+            <div class="mb-3">
+                <label class="form-label">Status</label>
+                <select class="form-select" th:field="*{status}" required>
+                    <option value="AVAILABLE"
+                            th:selected="${bed.status=='AVAILABLE'}">
+                        AVAILABLE
+                    </option>
+                    <option value="OCCUPIED"
+                            th:selected="${bed.status=='OCCUPIED'}">
+                        OCCUPIED
+                    </option>
+                </select>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex gap-2 mt-3">
+                <button type="submit" class="btn btn-primary px-4">Save</button>
+                <a th:href="@{/beds}" class="btn btn-secondary px-4">Cancel</a>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<th:block th:replace="fragments/footer :: footer"></th:block>
+</body>
+</html>

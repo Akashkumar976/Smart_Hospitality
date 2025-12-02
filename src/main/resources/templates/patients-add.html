@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Patient</title>
+    <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        .navbar {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Container */
+        .container {
+            background: #ffffffee;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            animation: fadeIn 0.8s ease;
+        }
+
+        /* Heading */
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        /* Form Labels */
+        .form-label {
+            font-weight: 500;
+            color: #34495e;
+        }
+
+        /* Form Inputs */
+        input.form-control, select.form-select {
+            border-radius: 8px;
+            padding: 10px 12px;
+            transition: 0.3s;
+        }
+
+        input.form-control:focus, select.form-select:focus {
+            border-color: #5dade2;
+            box-shadow: 0 0 8px rgba(93, 173, 226, 0.4);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: linear-gradient(45deg, #6a11cb, #2575fc);
+            border: none;
+            transition: 0.3s;
+            width: 48%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: #bdc3c7;
+            border: none;
+            color: #2c3e50;
+            width: 48%;
+        }
+
+        .btn-secondary:hover {
+            background: #95a5a6;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* Button container */
+        .form-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(-20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+    </style>
+</head>
+<body>
+            <div th:replace="fragments/navbar :: staffNavbar"></div>
+<br>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" th:href="@{/patients}">Hospital Management</a>
+</nav>
+
+<div class="container mt-4">
+    <h2>Add Patient</h2>
+    <form th:action="@{/patients/add}" th:object="${patient}" method="post">
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Enter patient name" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="mobileNumber" class="form-label">Mobile Number</label>
+            <input type="text" th:field="*{mobileNumber}" class="form-control" id="mobileNumber" placeholder="Enter mobile number" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="address" class="form-label">Address</label>
+            <input type="text" th:field="*{address}" class="form-control" id="address" placeholder="Enter address">
+        </div>
+
+        <div class="mb-3">
+            <label for="gender" class="form-label">Gender</label>
+            <select th:field="*{gender}" class="form-select" id="gender">
+                <option value="">Select gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="age" class="form-label">Age</label>
+            <input type="number" th:field="*{age}" class="form-control" id="age" placeholder="Enter age">
+        </div>
+
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-primary">Add Patient</button>
+            <a th:href="@{/patients}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

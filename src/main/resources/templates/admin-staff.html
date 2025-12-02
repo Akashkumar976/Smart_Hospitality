@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Staff Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+            <div th:replace="fragments/navbar :: staffNavbar"></div>
+<br>
+<div class="container mt-5">
+    <h2>Staff List</h2>
+    <a class="btn btn-success mb-3" href="/admin/staff/add">Add Staff</a>
+    <table class="table table-bordered table-striped">
+        <thead class="table-primary">
+        <tr>
+            <th>ID</th>
+            <th>Staff ID</th>
+            <th>Name</th>
+            <th>Aadhaar</th>
+            <th>Role</th>
+            <th>Mobile</th>
+            <th>Join Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="s : ${staffList}">
+            <td th:text="${s.id}"></td>
+            <td th:text="${s.staffId}"></td>
+            <td th:text="${s.name}"></td>
+            <td th:text="${s.adharNumber}"></td>
+            <td th:text="${s.role}"></td>
+            <td th:text="${s.mobileNumber}"></td>
+            <td th:text="${s.joinDate}"></td>
+            <td th:text="${s.status}"></td>
+            <td>
+                <a th:href="@{'/admin/staff/edit/' + ${s.id}}" class="btn btn-warning btn-sm">Edit</a>
+                <a th:href="@{'/admin/staff/delete/' + ${s.id}}" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
