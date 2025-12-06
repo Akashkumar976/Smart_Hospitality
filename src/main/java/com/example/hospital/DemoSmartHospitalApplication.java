@@ -15,6 +15,6 @@ public class DemoSmartHospitalApplication {
 
     @GetMapping("/")
     public String index() {
-        return "index"; // This will render index.html
+        return "index"; // This will render index.html from templates
     }
 }
