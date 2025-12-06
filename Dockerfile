@@ -1,20 +1,24 @@
-# Step 1: Use Eclipse Temurin Java 17 base image
-FROM eclipse-temurin:17-jdk
-
-# Step 2: Set working directory inside container
+# ============ 1: Build Stage (Maven + Java 17) ============
+FROM maven:3.9.4-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Step 3: Copy entire project into container
-COPY . .
+# Copy pom.xml and download dependencies first (cache)
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
 
-# Step 4: Install Maven
-RUN apt-get update && apt-get install -y maven
+# Copy entire source code
+COPY src ./src
 
-# Step 5: Build the Spring Boot project (skip tests)
+# Build project
 RUN mvn clean package -DskipTests
 
-# Step 6: Expose port 8080 for Spring Boot
+# ============ 2: Run Stage (Lightweight JDK) ============
+FROM eclipse-temurin:17-jdk
+WORKDIR /app
+
+# Copy jar from build stage
+COPY --from=build /app/target/*.jar app.jar
+
 EXPOSE 8080
 
-# Step 7: Run the Spring Boot JAR
-ENTRYPOINT ["java","-jar","target/SmartHospitality-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
