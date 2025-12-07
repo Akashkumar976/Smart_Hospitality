@@ -42,9 +42,6 @@
                     <td th:text="${s.status}"></td>
                     <td>
                         <a th:href="@{'/admin/staff/view/' + ${s.id}}" class="btn btn-info btn-sm">View</a>
-                        <a th:href="@{'/admin/staff/edit/' + ${s.id}}" class="btn btn-warning btn-sm">Edit</a>
-                        <a th:href="@{'/admin/staff/delete/' + ${s.id}}" class="btn btn-danger btn-sm"
-                           onclick="return confirm('Are you sure?');">Delete</a>
                     </td>
                 </tr>
             </tbody>
