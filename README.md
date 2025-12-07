@@ -1,4 +1,4 @@
-<img width="809" height="648" alt="Screenshot 2025-12-07 141749" src="https://github.com/user-attachments/assets/a321a60d-26b2-4cf6-8497-83bb3f8d7758" /><img width="1883" height="815" alt="Screenshot 2025-12-07 141734" src="https://github.com/user-attachments/assets/32e6f15f-b499-4f14-b5f9-a5a7881ec154" /><img width="1289" height="635" alt="Screenshot 2025-12-07 141710" src="https://github.com/user-attachments/assets/12b45410-e55b-42de-8ecd-34a321610d15" /><img width="1290" height="667" alt="Screenshot 2025-12-07 141654" src="https://github.com/user-attachments/assets/bd4f22ac-f8ce-4816-af84-c36b5ed588d0" /># 🏥 Smart Hospitality – Complete Hospital Management System
+# 🏥 Smart Hospitality – Complete Hospital Management System
 
 Smart Hospitality is a secure and modern **Hospital Management System (HMS)** designed to automate and streamline hospital operations.  
 It provides role-based access, real-time bed availability, automated billing, appointment scheduling, and secure staff management.
@@ -83,5 +83,6 @@ https://akashsingh.onrender.com/
 <img width="1875" height="887" alt="Screenshot 2025-12-07 141454" src="https://github.com/user-attachments/assets/bcaf2c7c-fcf7-4a95-9a8c-7aad46b9e825" />
 <img width="1907" height="892" alt="Screenshot 2025-12-07 141436" src="https://github.com/user-attachments/assets/434cc4b8-0a1f-48a1-9563-c3cecf823406" />
 <img width="1831" height="901" alt="Screenshot 2025-12-07 141418" src="https://github.com/user-attachments/assets/05328da5-82bd-4338-90ec-00a6dc326075" />
+<img width="809" height="648" alt="Screenshot 2025-12-07 141749" src="https://github.com/user-attachments/assets/a321a60d-26b2-4cf6-8497-83bb3f8d7758" /><img width="1883" height="815" alt="Screenshot 2025-12-07 141734" src="https://github.com/user-attachments/assets/32e6f15f-b499-4f14-b5f9-a5a7881ec154" /><img width="1289" height="635" alt="Screenshot 2025-12-07 141710" src="https://github.com/user-attachments/assets/12b45410-e55b-42de-8ecd-34a321610d15" /><img width="1290" height="667" alt="Screenshot 2025-12-07 141654" src="https://github.com/user-attachments/assets/bd4f22ac-f8ce-4816-af84-c36b5ed588d0" />
 <img width="979" height="618" alt="Screenshot 2025-12-07 141806 - Copy" src="https://github.com/user-attachments/assets/4040e8d4-ce59-41a7-b578-1b780b3f883e" />
 
